@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { IdentityEntity } from './identity.entity';
@@ -15,7 +15,11 @@ export class IdentityService {
     }
 
     async getUser(id:number){
-        return await this.identityRepo.findOne(id);
+        const user = await this.identityRepo.findOne(id);
+        if(!user){
+            throw new HttpException('Not Found in Database',HttpStatus.NOT_FOUND);
+        }
+        return user;
     }
 
     async addUser(data:IdentityDTO){

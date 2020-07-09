@@ -3,10 +3,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { IdentityModule } from './identity/identity.module';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpErrorFilter } from './shared/http-error-filter';
 
 @Module({
   imports: [TypeOrmModule.forRoot(),IdentityModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+    provide: APP_FILTER,
+    useClass:HttpErrorFilter,
+    }],
 })
 export class AppModule {}
