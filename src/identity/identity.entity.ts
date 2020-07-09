@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne,  } from "typeorm";
+import { PictureEntity } from "src/Picture/picture.entity";
 
 @Entity('User')
 export class IdentityEntity {
@@ -19,8 +20,7 @@ export class IdentityEntity {
 
     @Column('int')
     phone_number:number;
-
+   
     @Column()
     role:boolean;
 }
-

@@ -1,6 +1,5 @@
 import { IsString, IsBoolean, IsEmail, IsMobilePhone } from 'class-validator';
 
-
 export class IdentityDTO{
     @IsString()
     first_name:string;
