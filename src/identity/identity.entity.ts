@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne,  } from "typeorm";
 import { PictureEntity } from "src/Picture/picture.entity";
+import { LicenseEntity } from "src/license/license.entity";
 
 @Entity('User')
 export class IdentityEntity {
@@ -23,4 +24,10 @@ export class IdentityEntity {
    
     @Column()
     role:boolean;
+
+    @OneToMany(()=> PictureEntity,pictureEntity =>pictureEntity.pic_id )
+    pictureEntity:PictureEntity;
+
+    @OneToMany(()=> LicenseEntity,licenseEntity =>licenseEntity.license_id )
+    licenseEntity:LicenseEntity;
 }
