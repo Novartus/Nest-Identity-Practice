@@ -10,7 +10,6 @@ import { IdentityService } from './identity.service';
 import { IdentityDTO } from './identity.dto';
 import { GroupDTO } from 'src/Group/group.dto';
 import { editFileName, pictureFileFilter,licenseFileFilter } from 'src/utils/file-upload.utils';
-import { request } from 'https';
 
 @Controller('identity')
 export class IdentityController {
@@ -43,8 +42,8 @@ export class IdentityController {
 
     @Get(':id')
     getUser(@Param('id') id:number){
-        return this.identityService.getUser(id);
-    }
+        return this.identityService.getAll(id);
+  } 
 
 
     @Get('picture/:id')

@@ -53,6 +53,28 @@ export class IdentityService {
 
 
 //---------------GET Methods--------------------------
+    async getAll(id:number){
+        const user = await this.identityRepo.findOne(id);
+        const pic = await this.pictureRepo.findOne(id);
+        const lic = await this.licenseRepo.findOne(id);
+        const group = await this.groupRepo.findOne(id);
+
+        const allDetails={
+            first_name :user.first_name,
+            last_name:user.last_name,
+            email:user.email,
+            phone:user.phone_number,
+            role:user.role,
+            group_number:user.group_number,
+            photo:pic.originalname,
+            license_front:lic.license_front,
+            license_back:lic.license_back,
+            group_name:group.group_name
+        }
+        return allDetails;
+
+    }
+
 
     async getUser(id:number){
         const user = await this.identityRepo.findOne(id);
