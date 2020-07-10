@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Controller, Get, Param, Post, Body, UsePipes, Put } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, UsePipes, Patch, Delete } from '@nestjs/common';
 import { ValidationPipe } from '../shared/validation.pipe';
 
 import { IdentityService } from './identity.service';
@@ -26,14 +26,19 @@ export class IdentityController {
     }
 
 
-    @Get('pic/:id')
-    getPic(@Param('id') id:number){
+    @Get('picture/:id')
+    getPicture(@Param('id') id:number){
         return this.identityService.getPicture(id);
     }
 
     @Get('license/:id')
-    getLic(@Param('id') id:number){
+    getLicense(@Param('id') id:number){
         return this.identityService.getLicense(id);
+    }
+
+    @Get('group/:id')
+    getGroup(@Param('id') id:number){
+        return this.identityService.getGroup(id);
     }
 
     //-----------------POST--------------------
@@ -44,14 +49,14 @@ export class IdentityController {
         return this.identityService.addUser(data);
     }
 
-    @Post('pic')
-    addPicture(@Body() data:PictureDTO){
+    @Post('picture')
+    addPic(@Body() data:PictureDTO){
         return this.identityService.addPicture(data);
     }
 
     @Post('license')
     @UsePipes(new ValidationPipe())
-    addLicense(@Body() data:LicenseDTO){
+    addLic(@Body() data:LicenseDTO){
         return this.identityService.addLicense(data);
     }
 
@@ -61,11 +66,56 @@ export class IdentityController {
         return this.identityService.addGroup(data);
     }
     
-    //-----------------PUT--------------------
+    //-----------------PATCH--------------------
 
-    @Put(':id')
+    @Patch(':id')
     @UsePipes(new ValidationPipe())
-    updateUser(@Param('id') id:number, @Body('data') data:Partial<IdentityDTO>){
-        return this.identityService.updateUser(id,data);
+    patchUser(@Param('id') id:number, @Body() data:Partial<IdentityDTO>){
+        return this.identityService.patchUser(id,data);
     }
+
+    @Patch('picture/:id')
+    @UsePipes(new ValidationPipe())
+    patchPic(@Param('id') id:number, @Body() data:Partial<PictureDTO>){
+        return this.identityService.patchPicture(id,data);
+    }
+
+    @Patch('license/:id')
+    @UsePipes(new ValidationPipe())
+    patchLic(@Param('id') id:number, @Body() data:Partial<LicenseDTO>){
+        return this.identityService.patchLicense(id,data);
+    }
+
+    @Patch('group/:id')
+    @UsePipes(new ValidationPipe())
+    patchGroup(@Param('id') id:number, @Body() data:Partial<GroupDTO>){
+        return this.identityService.patchGroup(id,data);
+    }
+
+    //-----------------DELETE--------------------
+
+    @Delete(':id')
+    @UsePipes(new ValidationPipe())
+    deleteUser(@Param('id') id:number){
+        return this.identityService.deleteUser(id);
+    }
+
+    @Delete('picture/:id')
+    @UsePipes(new ValidationPipe())
+    deletePic(@Param('id') id:number){
+        return this.identityService.deletePicture(id);
+    }
+    
+    @Delete('license/:id')
+    @UsePipes(new ValidationPipe())
+    deleteLic(@Param('id') id:number){
+        return this.identityService.deleteLicense(id);
+    }
+
+    @Delete('group/:id')
+    @UsePipes(new ValidationPipe())
+    deleteGroup(@Param('id') id:number){
+        return this.identityService.deleteGroup(id);
+    }
+
 }

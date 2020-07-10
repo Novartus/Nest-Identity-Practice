@@ -19,7 +19,8 @@ import { GroupDTO } from 'src/Group/group.dto';
 @Injectable()
 export class IdentityService {
 
-    constructor(@InjectRepository(IdentityEntity)
+    constructor(
+    @InjectRepository(IdentityEntity)
     private identityRepo:Repository<IdentityEntity>,
 
     @InjectRepository(PictureEntity)
@@ -62,6 +63,14 @@ export class IdentityService {
         }
         return lic;
     }
+
+    async getGroup(id:number){
+        const group = await this.groupRepo.findOne(id);
+        if(!group){
+            throw new HttpException('Not Group in Database for given ID',HttpStatus.NOT_FOUND);
+        }
+        return group;
+    }
   
 //---------------POST--------------------------
   
@@ -71,7 +80,7 @@ export class IdentityService {
         return "User Added";
     }
 
-    checkURL(url:string) {
+    imgCheckURL(url:string) {
         return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
     }
 
@@ -80,25 +89,35 @@ export class IdentityService {
             return "No Pic Found";
         }
 
-        if(this.checkURL(data.pic_url)){
+        if(this.imgCheckURL(data.pic_url)){
             const pic=  this.pictureRepo.create(data);
             await this.pictureRepo.save(pic);
             return "Picture Added";
+        }else{
+            return "Please Insert Valid Picture URL";
         }
         
     }
 
+    licCheckURL(url:string) {
+        return(url.match(/\.(jpeg|jpg|png|pdf)$/) != null);
+    }
     async addLicense(data:LicenseDTO){
         if(data[0] == null || data[1] == null){
             return "Add Both Sides Please";
         }
-        const Data={
-            license_front:data[0],
-            license_back:data[1]
+        if(this.licCheckURL(data[0]) && this.licCheckURL(data[1])){
+            const Data={
+                license_front:data[0],
+                license_back:data[1]
+            }
+            const lic = this.licenseRepo.create(Data);
+            await this.licenseRepo.save(lic);
+            return "License Added";
+        }else{
+            return "Please Enter Valid Format for License (IMG/PDF)"
         }
-        const lic = this.licenseRepo.create(Data);
-        await this.licenseRepo.save(lic);
-        return "License Added";
+       
     }
 
     async addGroup(data:GroupDTO){
@@ -108,10 +127,55 @@ export class IdentityService {
     }
 
 
-//---------------PUT--------------------------
+//---------------PATCH--------------------------
 
-    async updateUser(id:number, data:Partial<IdentityDTO>){
+    async patchUser(id:number, data:Partial<IdentityDTO>){
         await this.identityRepo.update(id,data);
-        return await this.identityRepo.findOne(id);
+        return "Data Updated";
     }
+
+    async patchPicture(id:number, data:Partial<PictureDTO>){
+        await this.pictureRepo.update(id,data);
+        return "Pic Updated";
+    }
+
+    async patchLicense(id:number, data:Partial<LicenseDTO>){
+        if(data[0] == null || data[1] == null){
+            return "Add Both Sides Please";
+        }
+        const Data={
+            license_front:data[0],
+            license_back:data[1]
+        }
+        await this.licenseRepo.update(id,Data);
+        return "License Updated";
+    }
+
+    async patchGroup(id:number,data:Partial<GroupDTO>){
+        await this.groupRepo.update(id,data);
+        return "Group Details Updated";
+    }
+
+//---------------DELETE--------------------------
+
+    async deleteUser(id:number){
+        await this.identityRepo.delete(id);
+        return "User Identity Deleted";
+    }
+
+    async deletePicture(id:number){
+        await this.pictureRepo.delete(id);
+        return "Pic Deleted";
+    }
+
+    async deleteLicense(id:number){
+        await this.licenseRepo.delete(id);
+        return "License Deleted";
+    }
+
+    async deleteGroup(id:number){
+        await this.groupRepo.delete(id);
+        return "Group Deleted";
+    }
+    
 }
