@@ -74,10 +74,14 @@ export class IdentityService {
   
 //---------------POST--------------------------
   
-    async addUser(data:IdentityDTO){
-        const user = this.identityRepo.create(data);
-        await this.identityRepo.save(user);
-        return "User Added";
+    async addUser(data:Partial<IdentityDTO>){
+        if((data.role === false && (!data.group_number))||(data.role === true && data.group_number)){
+            const user = this.identityRepo.create(data);
+            await this.identityRepo.save(user);
+            return "User Added";
+        }else{
+            return "Check Your Group Details";
+        }
     }
 
     imgCheckURL(url:string) {

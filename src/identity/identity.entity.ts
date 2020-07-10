@@ -29,8 +29,11 @@ export class IdentityEntity {
     @Column()
     role:boolean;
 
-    @Column('int')
-    group_number:number;
+    @Column({
+        nullable:true,
+        type:'int'
+    })
+    group_number?:number;
 
     @OneToMany(()=> PictureEntity, picture=>picture.id)
     pictures:PictureEntity;

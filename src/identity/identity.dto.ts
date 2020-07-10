@@ -17,5 +17,5 @@ export class IdentityDTO{
     role:boolean;
 
     @IsNumber()
-    group_number:number;
+    group_number?:number;
 }

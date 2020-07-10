@@ -45,7 +45,7 @@ export class IdentityController {
 
     @Post()
     @UsePipes(new ValidationPipe())
-    addUser( @Body() data:IdentityDTO){
+    addUser( @Body() data:Partial<IdentityDTO>){
         return this.identityService.addUser(data);
     }
 
