@@ -14,6 +14,12 @@ export class LicenseEntity{
     
     @Column('text')
     license_back:string;
+
+    @Column('text')
+    license_front_original:string;
+
+    @Column('text')
+    license_Back_original:string;   
    
     @ManyToOne(() => IdentityEntity, user => user.licenses)
     @JoinColumn({ name: 'license_id' })

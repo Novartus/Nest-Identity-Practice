@@ -10,7 +10,6 @@ import { IdentityDTO } from './identity.dto';
 import { PictureEntity } from 'src/Picture/picture.entity';
 import { PictureDTO } from 'src/Picture/picture.dto';
 
-import { LicenseDTO } from 'src/license/license.dto';
 import { LicenseEntity } from 'src/license/license.entity';
 
 import { GroupEntity } from 'src/Group/group.entity';
@@ -107,33 +106,23 @@ export class IdentityService {
         return "Pic Added" ;
     }
 
-
-
-
-
-    licCheckURL(url:string) {
-        return(url.match(/\.(jpeg|jpg|png|pdf)$/) != null);
+    
+    addLicense(data1:any[],data2:any[]){
+    if((data1[0] == null || data1[1] == null || data1.length!=2) 
+    || (data2[0] == null || data2[1] == null || data2.length!=2))
+    {
+        return "Add 2 Sides Please";
     }
-    async addLicense(data:LicenseDTO){
-        if(data[0] == null || data[1] == null){
-            return "Add Both Sides Please";
+        const Data={
+            license_front:data1[0].toString(),
+            license_back:data1[1].toString(),
+            license_front_original:data2[0].toString(),
+            license_Back_original:data2[1].toString()
         }
-        if(this.licCheckURL(data[0]) && this.licCheckURL(data[1])){
-            const Data={
-                license_front:data[0],
-                license_back:data[1]
-            }
-            const lic = this.licenseRepo.create(Data);
-            await this.licenseRepo.save(lic);
-            return "License Added";
-        }else{
-            return "Please Enter Valid Format for License (IMG/PDF)"
-        }
-       
-    }
-
-
-
+        const lic = this.licenseRepo.create(Data);
+        this.licenseRepo.save(lic);
+        return "License Added??";
+   }
 
 
 
@@ -152,22 +141,22 @@ export class IdentityService {
         return "Data Updated";
     }
 
-    async patchPicture(id:number, data:Partial<PictureDTO>){
-        await this.pictureRepo.update(id,data);
-        return "Pic Updated";
-    }
+    // async patchPicture(id:number, data:Partial<PictureDTO>){
+    //     await this.pictureRepo.update(id,data);
+    //     return "Pic Updated";
+    // }
 
-    async patchLicense(id:number, data:Partial<LicenseDTO>){
-        if(data[0] == null || data[1] == null){
-            return "Add Both Sides Please";
-        }
-        const Data={
-            license_front:data[0],
-            license_back:data[1]
-        }
-        await this.licenseRepo.update(id,Data);
-        return "License Updated";
-    }
+    // async patchLicense(id:number, data:Partial<LicenseDTO>){
+    //     if(data[0] == null || data[1] == null){
+    //         return "Add Both Sides Please";
+    //     }
+    //     const Data={
+    //         license_front:data[0],
+    //         license_back:data[1]
+    //     }
+    //     await this.licenseRepo.update(id,Data);
+    //     return "License Updated";
+    // }
 
     async patchGroup(id:number,data:Partial<GroupDTO>){
         await this.groupRepo.update(id,data);

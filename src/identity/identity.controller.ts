@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Controller, Get, Param, Post, Body, UsePipes, Patch, Delete, UseInterceptors, Res, UploadedFile } from '@nestjs/common';
-import {  FileInterceptor} from '@nestjs/platform-express';
+import { Controller, Get, Param, Post, Body, UsePipes, Patch, Delete, UseInterceptors, Res, UploadedFile, UploadedFiles } from '@nestjs/common';
+import {  FileInterceptor, FilesInterceptor} from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
 import { ValidationPipe } from '../shared/validation.pipe';
@@ -8,10 +8,8 @@ import { ValidationPipe } from '../shared/validation.pipe';
 import { IdentityService } from './identity.service';
 
 import { IdentityDTO } from './identity.dto';
-import { PictureDTO } from 'src/Picture/picture.dto';
-import { LicenseDTO } from 'src/license/license.dto';
 import { GroupDTO } from 'src/Group/group.dto';
-import { editFileName, imageFileFilter } from 'src/utils/file-upload.utils';
+import { editFileName, pictureFileFilter,licenseFileFilter } from 'src/utils/file-upload.utils';
 
 @Controller('identity')
 export class IdentityController {
@@ -75,11 +73,11 @@ export class IdentityController {
     //     return this.identityService.addPicture(data);
     // }
 
-    @Post('license')
-    @UsePipes(new ValidationPipe())
-    addLic(@Body() data:LicenseDTO){
-        return this.identityService.addLicense(data);
-    }
+    // @Post('license')
+    // @UsePipes(new ValidationPipe())
+    // addLic(@Body() data:LicenseDTO){
+    //     return this.identityService.addLicense(data);
+    // }
 
     @Post('group')
     @UsePipes(new ValidationPipe())
@@ -95,17 +93,17 @@ export class IdentityController {
         return this.identityService.patchUser(id,data);
     }
 
-    @Patch('picture/:id')
-    @UsePipes(new ValidationPipe())
-    patchPic(@Param('id') id:number, @Body() data:Partial<PictureDTO>){
-        return this.identityService.patchPicture(id,data);
-    }
+    // @Patch('picture/:id')
+    // @UsePipes(new ValidationPipe())
+    // patchPic(@Param('id') id:number, @Body() data:Partial<PictureDTO>){
+    //     return this.identityService.patchPicture(id,data);
+    // }
 
-    @Patch('license/:id')
-    @UsePipes(new ValidationPipe())
-    patchLic(@Param('id') id:number, @Body() data:Partial<LicenseDTO>){
-        return this.identityService.patchLicense(id,data);
-    }
+    // @Patch('license/:id')
+    // @UsePipes(new ValidationPipe())
+    // patchLic(@Param('id') id:number, @Body() data:Partial<LicenseDTO>){
+    //     return this.identityService.patchLicense(id,data);
+    // }
 
     @Patch('group/:id')
     @UsePipes(new ValidationPipe())
@@ -146,7 +144,7 @@ export class IdentityController {
           destination: './files',
           filename: editFileName,
         }),
-        fileFilter: imageFileFilter,
+        fileFilter: pictureFileFilter,
       }),
     )
     async uploadedFile(@UploadedFile() file) {
@@ -157,11 +155,37 @@ export class IdentityController {
       return this.identityService.addImage(response);
     }
 
-   
-    @Get(':imgpath')
-    SeeUploadedFile(@Param('imgpath') image, @Res() res){
-        res.sendFile(image,{root: 'files'})
+    @Post('license')
+    @UseInterceptors(
+      FilesInterceptor('image', 20, {
+        storage: diskStorage({
+          destination: './files',
+          filename: editFileName,
+        }),
+        fileFilter: licenseFileFilter,
+      }),
+    )
+
+    async uploadMultipleFiles(@UploadedFiles() files) {
+      const responseOriginalName = [];
+      const responseFileName = [];
+     
+      files.forEach(file => {
+        const fileReponse = {
+          originalname: file.originalname,
+          filename: file.filename,
+        };
+        responseOriginalName.push(fileReponse.originalname);
+        responseFileName.push(fileReponse.filename);
+      }
+      );
+       return   this.identityService.addLicense(responseOriginalName,responseFileName);
     }
-   
+
+
+    @Get(':imgpath')
+    seeUploadedFile(@Param('imgpath') image, @Res() res) {
+      return res.sendFile(image, { root: './files' });
+    }
 
 }
