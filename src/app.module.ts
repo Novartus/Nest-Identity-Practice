@@ -7,7 +7,13 @@ import { APP_FILTER } from '@nestjs/core';
 import { HttpErrorFilter } from './shared/http-error-filter';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(),IdentityModule],
+
+
+  imports: [TypeOrmModule.forRoot(),
+    IdentityModule,
+   ],
+
+
   controllers: [AppController],
   providers: [AppService,
     {

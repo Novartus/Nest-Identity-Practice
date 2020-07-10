@@ -99,24 +99,17 @@ export class IdentityService {
         }
     }
 
-    imgCheckURL(url:string) {
-        return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+
+    async addImage(data:PictureDTO){
+
+        const pic = this.pictureRepo.create(data);
+        await this.pictureRepo.save(pic);
+        return "Pic Added" ;
     }
 
-    async addPicture(data:PictureDTO){
-        if(!data){
-            return "No Pic Found";
-        }
 
-        if(this.imgCheckURL(data.pic_url)){
-            const pic=  this.pictureRepo.create(data);
-            await this.pictureRepo.save(pic);
-            return "Picture Added";
-        }else{
-            return "Please Insert Valid Picture URL";
-        }
-        
-    }
+
+
 
     licCheckURL(url:string) {
         return(url.match(/\.(jpeg|jpg|png|pdf)$/) != null);
@@ -139,6 +132,12 @@ export class IdentityService {
        
     }
 
+
+
+
+
+
+    
     async addGroup(data:GroupDTO){
         const group = await this.groupRepo.create(data);
         await this.groupRepo.save(group);

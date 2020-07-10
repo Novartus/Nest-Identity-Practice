@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Controller, Get, Param, Post, Body, UsePipes, Patch, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, UsePipes, Patch, Delete, UseInterceptors, Res, UploadedFile } from '@nestjs/common';
+import {  FileInterceptor} from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+
 import { ValidationPipe } from '../shared/validation.pipe';
 
 import { IdentityService } from './identity.service';
@@ -8,6 +11,7 @@ import { IdentityDTO } from './identity.dto';
 import { PictureDTO } from 'src/Picture/picture.dto';
 import { LicenseDTO } from 'src/license/license.dto';
 import { GroupDTO } from 'src/Group/group.dto';
+import { editFileName, imageFileFilter } from 'src/utils/file-upload.utils';
 
 @Controller('identity')
 export class IdentityController {
@@ -66,10 +70,10 @@ export class IdentityController {
         return this.identityService.addUser(data);
     }
 
-    @Post('picture')
-    addPic(@Body() data:PictureDTO){
-        return this.identityService.addPicture(data);
-    }
+    // @Post('picture')
+    // addPic(@Body() data:PictureDTO){
+    //     return this.identityService.addPicture(data);
+    // }
 
     @Post('license')
     @UsePipes(new ValidationPipe())
@@ -134,5 +138,30 @@ export class IdentityController {
     deleteGroup(@Param('id') id:number){
         return this.identityService.deleteGroup(id);
     }
+   
+    @Post('picture')
+    @UseInterceptors(
+      FileInterceptor('image', {
+        storage: diskStorage({
+          destination: './files',
+          filename: editFileName,
+        }),
+        fileFilter: imageFileFilter,
+      }),
+    )
+    async uploadedFile(@UploadedFile() file) {
+    const response = {
+        originalname: file.originalname,
+        filename: file.filename,
+      };
+      return this.identityService.addImage(response);
+    }
+
+   
+    @Get(':imgpath')
+    SeeUploadedFile(@Param('imgpath') image, @Res() res){
+        res.sendFile(image,{root: 'files'})
+    }
+   
 
 }

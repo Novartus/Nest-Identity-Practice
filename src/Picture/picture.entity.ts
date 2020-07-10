@@ -7,11 +7,11 @@ export class PictureEntity{
     @PrimaryGeneratedColumn('increment')
     id:number;
 
-    // @Column('text')
-    // user:string;
+    @Column('text')
+    originalname:string;
 
     @Column('text')
-    pic_url:string;
+    filename:string;
    
     @ManyToOne(() => IdentityEntity, user => user.pictures)
     @JoinColumn({ name: 'picture_id' })
