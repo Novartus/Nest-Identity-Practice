@@ -107,4 +107,11 @@ export class IdentityService {
         return "Group Added";
     }
 
+
+//---------------PUT--------------------------
+
+    async updateUser(id:number, data:Partial<IdentityDTO>){
+        await this.identityRepo.update(id,data);
+        return await this.identityRepo.findOne(id);
+    }
 }

@@ -6,8 +6,8 @@ export class LicenseEntity{
     @PrimaryGeneratedColumn('increment')
     id:number;
 
-    @Column('text')
-    user:string;
+    // @Column('text')
+    // user:string;
 
     @Column('text')
     license_front:string;

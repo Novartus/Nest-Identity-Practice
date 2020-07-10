@@ -5,7 +5,7 @@
     "username": "root",
     "password": "root",
     "database": "Identity_Demo",
-    "synchronize": true,
+    "synchronize": false,
     "logging": true,
     "entities": ["dist/**/*.entity.js"]
  }

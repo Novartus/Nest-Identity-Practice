@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Controller, Get, Param, Post, Body, UsePipes } from '@nestjs/common';
-import { IdentityService } from './identity.service';
-import { IdentityDTO } from './identity.dto';
+import { Controller, Get, Param, Post, Body, UsePipes, Put } from '@nestjs/common';
 import { ValidationPipe } from '../shared/validation.pipe';
+
+import { IdentityService } from './identity.service';
+
+import { IdentityDTO } from './identity.dto';
 import { PictureDTO } from 'src/Picture/picture.dto';
 import { LicenseDTO } from 'src/license/license.dto';
 import { GroupDTO } from 'src/Group/group.dto';
@@ -58,5 +60,12 @@ export class IdentityController {
     addGroup(@Body() data:GroupDTO){
         return this.identityService.addGroup(data);
     }
+    
+    //-----------------PUT--------------------
 
+    @Put(':id')
+    @UsePipes(new ValidationPipe())
+    updateUser(@Param('id') id:number, @Body('data') data:Partial<IdentityDTO>){
+        return this.identityService.updateUser(id,data);
+    }
 }

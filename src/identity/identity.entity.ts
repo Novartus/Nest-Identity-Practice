@@ -32,9 +32,9 @@ export class IdentityEntity {
     @Column('int')
     group_number:number;
 
-    @OneToMany(()=> PictureEntity, picture=>picture.user)
+    @OneToMany(()=> PictureEntity, picture=>picture.id)
     pictures:PictureEntity;
 
-    @OneToMany(()=> LicenseEntity, license=>license.user)
+    @OneToMany(()=> LicenseEntity, license=>license.id)
     licenses:LicenseEntity;
 }

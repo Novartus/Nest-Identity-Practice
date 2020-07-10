@@ -7,8 +7,8 @@ export class PictureEntity{
     @PrimaryGeneratedColumn('increment')
     id:number;
 
-    @Column('text')
-    user:string;
+    // @Column('text')
+    // user:string;
 
     @Column('text')
     pic_url:string;

@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { IdentityService } from './identity.service';
 import { IdentityController } from './identity.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { IdentityEntity } from './identity.entity';
 import { PictureEntity } from 'src/Picture/picture.entity';
 import { LicenseEntity } from 'src/license/license.entity';
