@@ -125,9 +125,6 @@ export class IdentityService {
         this.licenseRepo.save(lic);
         return "License Added??";
    }
-
-
-
     
     async addGroup(data:GroupDTO){
         const group = await this.groupRepo.create(data);
@@ -148,22 +145,21 @@ export class IdentityService {
         return "Pic Updated" ;
     }
 
-    // async patchPicture(id:number, data:Partial<PictureDTO>){
-    //     await this.pictureRepo.update(id,data);
-    //     return "Pic Updated";
-    // }
-
-    // async patchLicense(id:number, data:Partial<LicenseDTO>){
-    //     if(data[0] == null || data[1] == null){
-    //         return "Add Both Sides Please";
-    //     }
-    //     const Data={
-    //         license_front:data[0],
-    //         license_back:data[1]
-    //     }
-    //     await this.licenseRepo.update(id,Data);
-    //     return "License Updated";
-    // }
+     async patchLicense(id:number, data1:any[],data2:any[]){
+        if((data1[0] == null || data1[1] == null || data1.length!=2) 
+        || (data2[0] == null || data2[1] == null || data2.length!=2))
+        {
+            return "Add 2 Sides Please";
+        }
+        const Data={
+        license_front:data1[0].toString(),
+        license_back:data1[1].toString(),
+        license_front_original:data2[0].toString(),
+        license_Back_original:data2[1].toString()
+    }
+        await this.licenseRepo.update(id,Data);
+         return "License Updated";
+     }
 
     async patchGroup(id:number,data:Partial<GroupDTO>){
         await this.groupRepo.update(id,data);

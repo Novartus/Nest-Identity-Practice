@@ -99,7 +99,7 @@ export class IdentityController {
       }),
     )
 
-    async uploadMultipleFiles(@UploadedFiles() files) {
+    async uploadLicenseFiles(@UploadedFiles() files) {
       const responseOriginalName = [];
       const responseFileName = [];
      
@@ -147,17 +147,32 @@ export class IdentityController {
       return this.identityService.patchImage(id,response);
     }
 
-    // @Patch('picture/:id')
-    // @UsePipes(new ValidationPipe())
-    // patchPic(@Param('id') id:number, @Body() data:Partial<PictureDTO>){
-    //     return this.identityService.patchPicture(id,data);
-    // }
+    @Patch('license/:id')
+    @UseInterceptors(
+        FilesInterceptor('image', 20, {
+          storage: diskStorage({
+            destination: './files',
+            filename: editFileName,
+          }),
+          fileFilter: licenseFileFilter,
+        }),
+      )
+      async patchLicenseFiles(@Param('id') id:number,@UploadedFiles() files) {
+        const responseOriginalName = [];
+        const responseFileName = [];
+       
+        files.forEach(file => {
+          const fileReponse = {
+            originalname: file.originalname,
+            filename: file.filename,
+          };
+          responseOriginalName.push(fileReponse.originalname);
+          responseFileName.push(fileReponse.filename);
+        }
+        );
+         return   this.identityService.patchLicense(id,responseOriginalName,responseFileName);
+      }
 
-    // @Patch('license/:id')
-    // @UsePipes(new ValidationPipe())
-    // patchLic(@Param('id') id:number, @Body() data:Partial<LicenseDTO>){
-    //     return this.identityService.patchLicense(id,data);
-    // }
 
     @Patch('group/:id')
     @UsePipes(new ValidationPipe())
