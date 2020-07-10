@@ -10,10 +10,12 @@ import { IdentityService } from './identity.service';
 import { IdentityDTO } from './identity.dto';
 import { GroupDTO } from 'src/Group/group.dto';
 import { editFileName, pictureFileFilter,licenseFileFilter } from 'src/utils/file-upload.utils';
+import { request } from 'https';
 
 @Controller('identity')
 export class IdentityController {
-    constructor(private identityService:IdentityService){}
+    static pic_id:number;
+    constructor(private identityService:IdentityService, ){}
     
     //-----------------GET ALL Data--------------------
 
@@ -68,17 +70,51 @@ export class IdentityController {
         return this.identityService.addUser(data);
     }
 
-    // @Post('picture')
-    // addPic(@Body() data:PictureDTO){
-    //     return this.identityService.addPicture(data);
-    // }
+    @Post('picture')
+    @UseInterceptors(
+      FileInterceptor('image', {
+        storage: diskStorage({
+          destination: './files',
+          filename: editFileName,
+        }),
+        fileFilter: pictureFileFilter,
+      }),
+    )
+    async uploadedFile(@UploadedFile() file) {
+    const response = {
+        originalname: file.originalname,
+        filename: file.filename,
+      };
+      return this.identityService.addImage(response);
+    }
 
-    // @Post('license')
-    // @UsePipes(new ValidationPipe())
-    // addLic(@Body() data:LicenseDTO){
-    //     return this.identityService.addLicense(data);
-    // }
+    @Post('license')
+    @UseInterceptors(
+      FilesInterceptor('image', 20, {
+        storage: diskStorage({
+          destination: './files',
+          filename: editFileName,
+        }),
+        fileFilter: licenseFileFilter,
+      }),
+    )
 
+    async uploadMultipleFiles(@UploadedFiles() files) {
+      const responseOriginalName = [];
+      const responseFileName = [];
+     
+      files.forEach(file => {
+        const fileReponse = {
+          originalname: file.originalname,
+          filename: file.filename,
+        };
+        responseOriginalName.push(fileReponse.originalname);
+        responseFileName.push(fileReponse.filename);
+      }
+      );
+       return   this.identityService.addLicense(responseOriginalName,responseFileName);
+    }
+    
     @Post('group')
     @UsePipes(new ValidationPipe())
     addGroup(@Body() data:GroupDTO){
@@ -91,6 +127,24 @@ export class IdentityController {
     @UsePipes(new ValidationPipe())
     patchUser(@Param('id') id:number, @Body() data:Partial<IdentityDTO>){
         return this.identityService.patchUser(id,data);
+    }
+
+    @Patch('picture/:id')
+    @UseInterceptors(
+      FileInterceptor('image', {
+        storage: diskStorage({
+          destination: './files',
+          filename: editFileName,
+        }),
+        fileFilter: pictureFileFilter,
+      }),
+    )
+    async uploadedPatchFile(@Param('id') id:number,@UploadedFile() file) {
+    const response = {
+        originalname: file.originalname,
+        filename: file.filename,
+      };
+      return this.identityService.patchImage(id,response);
     }
 
     // @Patch('picture/:id')
@@ -137,55 +191,6 @@ export class IdentityController {
         return this.identityService.deleteGroup(id);
     }
    
-    @Post('picture')
-    @UseInterceptors(
-      FileInterceptor('image', {
-        storage: diskStorage({
-          destination: './files',
-          filename: editFileName,
-        }),
-        fileFilter: pictureFileFilter,
-      }),
-    )
-    async uploadedFile(@UploadedFile() file) {
-    const response = {
-        originalname: file.originalname,
-        filename: file.filename,
-      };
-      return this.identityService.addImage(response);
-    }
-
-    @Post('license')
-    @UseInterceptors(
-      FilesInterceptor('image', 20, {
-        storage: diskStorage({
-          destination: './files',
-          filename: editFileName,
-        }),
-        fileFilter: licenseFileFilter,
-      }),
-    )
-
-    async uploadMultipleFiles(@UploadedFiles() files) {
-      const responseOriginalName = [];
-      const responseFileName = [];
-     
-      files.forEach(file => {
-        const fileReponse = {
-          originalname: file.originalname,
-          filename: file.filename,
-        };
-        responseOriginalName.push(fileReponse.originalname);
-        responseFileName.push(fileReponse.filename);
-      }
-      );
-       return   this.identityService.addLicense(responseOriginalName,responseFileName);
-    }
-
-
-    @Get(':imgpath')
-    seeUploadedFile(@Param('imgpath') image, @Res() res) {
-      return res.sendFile(image, { root: './files' });
-    }
+    
 
 }

@@ -107,6 +107,8 @@ export class IdentityService {
     }
 
     
+ 
+    
     addLicense(data1:any[],data2:any[]){
     if((data1[0] == null || data1[1] == null || data1.length!=2) 
     || (data2[0] == null || data2[1] == null || data2.length!=2))
@@ -139,6 +141,11 @@ export class IdentityService {
     async patchUser(id:number, data:Partial<IdentityDTO>){
         await this.identityRepo.update(id,data);
         return "Data Updated";
+    }
+
+    async patchImage(id:number,data:PictureDTO){
+        await this.pictureRepo.update(id,data);
+        return "Pic Updated" ;
     }
 
     // async patchPicture(id:number, data:Partial<PictureDTO>){
