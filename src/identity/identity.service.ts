@@ -17,8 +17,9 @@ import { GroupDTO } from 'src/Group/group.dto';
 
 @Injectable()
 export class IdentityService {
-
+    
     constructor(
+   
     @InjectRepository(IdentityEntity)
     private identityRepo:Repository<IdentityEntity>,
 
@@ -31,9 +32,11 @@ export class IdentityService {
     @InjectRepository(GroupEntity)
     private groupRepo:Repository<GroupEntity>
 
-    ){}
+    ){
+        
+    } public path=`Z:\\Demo\\identity-demo\\files`
 
-//---------------GETALL Methods--------------------------
+//---------------GET ALL Methods------------------------
 
     async getAllUsers(){
         return await this.identityRepo.find();
@@ -66,9 +69,9 @@ export class IdentityService {
             phone:user.phone_number,
             role:user.role,
             group_number:user.group_number,
-            photo:pic.originalname,
-            license_front:lic.license_front,
-            license_back:lic.license_back,
+            photo:this.path+pic.originalname,
+            license_front:this.path+lic.license_front,
+            license_back:this.path+lic.license_back,
             group_name:group.group_name
         }
         return allDetails;
@@ -111,7 +114,7 @@ export class IdentityService {
 //---------------POST--------------------------
   
     async addUser(data:Partial<IdentityDTO>){
-        if((data.role === false && (!data.group_number))||(data.role === true && data.group_number)){
+        if((data.role === 0 && (!data.group_number))||(data.role === 1 && data.group_number)){
             const user = this.identityRepo.create(data);
             await this.identityRepo.save(user);
             return "User Added";

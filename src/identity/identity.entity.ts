@@ -27,7 +27,7 @@ export class IdentityEntity {
     phone_number:number;
    
     @Column()
-    role:boolean;
+    role:number;
 
     @Column({
         nullable:true,

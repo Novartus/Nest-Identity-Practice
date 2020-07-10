@@ -13,8 +13,8 @@ export class IdentityDTO{
     @IsMobilePhone()
     phone_number:number;
 
-    @IsBoolean()
-    role:boolean;
+    @IsNumber()
+    role:number;
 
     @IsNumber()
     group_number?:number;

@@ -13,7 +13,7 @@ import { editFileName, pictureFileFilter,licenseFileFilter } from 'src/utils/fil
 
 @Controller('identity')
 export class IdentityController {
-    static pic_id:number;
+    static path='./files';
     constructor(private identityService:IdentityService, ){}
     
     //-----------------GET ALL Data--------------------
@@ -73,7 +73,7 @@ export class IdentityController {
     @UseInterceptors(
       FileInterceptor('image', {
         storage: diskStorage({
-          destination: './files',
+          destination: IdentityController.path,
           filename: editFileName,
         }),
         fileFilter: pictureFileFilter,
@@ -81,8 +81,8 @@ export class IdentityController {
     )
     async uploadedFile(@UploadedFile() file) {
     const response = {
-        originalname: file.originalname,
-        filename: file.filename,
+        originalname:file.originalname,
+        filename:file.filename,
       };
       return this.identityService.addImage(response);
     }
@@ -91,7 +91,7 @@ export class IdentityController {
     @UseInterceptors(
       FilesInterceptor('image', 20, {
         storage: diskStorage({
-          destination: './files',
+          destination: IdentityController.path,
           filename: editFileName,
         }),
         fileFilter: licenseFileFilter,
