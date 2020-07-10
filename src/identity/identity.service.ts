@@ -34,11 +34,26 @@ export class IdentityService {
 
     ){}
 
-//---------------GET--------------------------
+//---------------GETALL Methods--------------------------
 
-    async getAll(){
+    async getAllUsers(){
         return await this.identityRepo.find();
     }
+
+    async getAllPictures(){
+        return await this.pictureRepo.find();
+    }
+
+    async getAllLicenses(){
+        return await this.licenseRepo.find();
+    }
+
+    async getAllGroups(){
+        return await this.groupRepo.find();
+    }
+
+
+//---------------GET Methods--------------------------
 
     async getUser(id:number){
         const user = await this.identityRepo.findOne(id);

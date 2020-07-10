@@ -13,12 +13,29 @@ import { GroupDTO } from 'src/Group/group.dto';
 export class IdentityController {
     constructor(private identityService:IdentityService){}
     
-    //-----------------GET--------------------
+    //-----------------GET ALL Data--------------------
 
     @Get()
-    getAllUser(){
-        return this.identityService.getAll();
+    getAllUsers(){
+        return this.identityService.getAllUsers();
     }
+
+    @Get('picture')
+    getAllPictures(){
+        return this.identityService.getAllPictures();
+    }
+
+    @Get('license')
+    getAllLicenses(){
+        return this.identityService.getAllLicenses();
+    }
+
+    @Get('groups')
+    getAllGroups(){
+        return this.identityService.getAllGroups();
+    }
+
+    //-----------------GET--------------------
 
     @Get(':id')
     getUser(@Param('id') id:number){
