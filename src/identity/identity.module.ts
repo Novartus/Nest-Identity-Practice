@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { IdentityEntity } from './identity.entity';
 import { PictureEntity } from 'src/Picture/picture.entity';
 import { LicenseEntity } from 'src/license/license.entity';
+import { GroupEntity } from 'src/Group/group.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([IdentityEntity,PictureEntity,LicenseEntity])],
+  imports:[TypeOrmModule.forFeature([IdentityEntity,PictureEntity,LicenseEntity,GroupEntity])],
   providers: [IdentityService],
   controllers: [IdentityController]
 })

@@ -5,6 +5,7 @@ import { IdentityDTO } from './identity.dto';
 import { ValidationPipe } from '../shared/validation.pipe';
 import { PictureDTO } from 'src/Picture/picture.dto';
 import { LicenseDTO } from 'src/license/license.dto';
+import { GroupDTO } from 'src/Group/group.dto';
 
 @Controller('identity')
 export class IdentityController {
@@ -42,7 +43,6 @@ export class IdentityController {
     }
 
     @Post('pic')
-    // @UsePipes(new ValidationPipe())
     addPicture(@Body() data:PictureDTO){
         return this.identityService.addPicture(data);
     }
@@ -53,5 +53,10 @@ export class IdentityController {
         return this.identityService.addLicense(data);
     }
 
+    @Post('group')
+    @UsePipes(new ValidationPipe())
+    addGroup(@Body() data:GroupDTO){
+        return this.identityService.addGroup(data);
+    }
 
 }

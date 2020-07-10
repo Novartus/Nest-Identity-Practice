@@ -1,4 +1,4 @@
-import { IsString, IsBoolean, IsEmail, IsMobilePhone } from 'class-validator';
+import { IsString, IsBoolean, IsEmail, IsMobilePhone, IsNumber } from 'class-validator';
 
 export class IdentityDTO{
     @IsString()
@@ -15,4 +15,7 @@ export class IdentityDTO{
 
     @IsBoolean()
     role:boolean;
+
+    @IsNumber()
+    group_number:number;
 }
